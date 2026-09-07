@@ -8,8 +8,8 @@ Author        : Marcos Jarrín
 Email         : marvijarrin@gmail.com
 Website       : badasystem.com
 Date          : 22/06/2026
-Update        : 23/06/2026
-Rev           : 1.0
+Update        : 07/09/2026
+Rev           : 1.0.1
 License       : MIT
 Description:
     Two-player Tic-Tac-Toe game built with Harbour + MiniGUI Extended.
@@ -457,8 +457,7 @@ Notes:
 */
 FUNCTION CheckWinner()
 
-    LOCAL nCombo
-    LOCAL nI, nJ
+    LOCAL nI
     LOCAL nP1, nP2, nP3
     LOCAL nPlayer
 
