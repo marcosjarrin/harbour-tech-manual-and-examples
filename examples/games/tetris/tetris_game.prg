@@ -7,8 +7,8 @@ Author        : Marcos Jarrín
 Email         : marvijarrin@gmail.com
 Website       : badasystem.com
 Date          : 29/08/2026
-Update        : 06/09/2026
-Rev           : 1.0.1
+Update        : 07/09/2026
+Rev           : 1.0.2
 SPDX-License-Identifier: MIT
 Description:
 Core game logic with customizable background colors.
@@ -137,6 +137,7 @@ CLASS TTetrisGame
    METHOD IsTopReached()
    METHOD RefreshStats()
    METHOD ChangeBackColor( aColor, cStyle )
+
 ENDCLASS
 
 // ============================================================================
@@ -235,12 +236,13 @@ Returns:
 NIL
 */
 METHOD ChangeBackColor( aColor, cStyle ) CLASS TTetrisGame
-   LOCAL hDC, BTstruct
+
    IF cStyle == NIL
       cStyle := "SOLID"
    ENDIF
    ::aBackColor := aColor
    ::cBackStyle := cStyle
+
    // Release previous funds
    IF ::hBitmapBackground != NIL
       BT_BitmapRelease( ::hBitmapBackground )
@@ -252,6 +254,7 @@ METHOD ChangeBackColor( aColor, cStyle ) CLASS TTetrisGame
       ::aBackColor )
    // Refresh screen
    ::Render()
+
 RETURN NIL
 
 /*
@@ -265,8 +268,10 @@ Returns:
 NIL
 */
 METHOD CreateBitmaps() CLASS TTetrisGame
+
    LOCAL nI, hDC, BTstruct
    LOCAL aColors := { {0,255,255}, {0,0,255}, {255,128,64}, {255,255,0}, {0,255,0}, {128,0,128}, {255,0,0} }
+
    ::hBitmapBlock := Array( 7 )
    FOR nI := 1 TO 7
       ::hBitmapBlock[ nI ] := BT_BitmapCreateNew( ::nBlockSize, ::nBlockSize, aColors[ nI ] )
@@ -283,6 +288,7 @@ METHOD CreateBitmaps() CLASS TTetrisGame
       ::nBlockSize * ::nMaxCol, ;
       ::nBlockSize * ::nMaxRow, ;
       ::aBackColor )
+
 RETURN NIL
 
 /*
@@ -306,6 +312,7 @@ METHOD InitTetrominoes() CLASS TTetrisGame
    LOCAL _Z := { 0x0C60, 0x4C80, 0xC600, 0x2640 }
    LOCAL nI, nK, aAux
    ::aTetromino := { _I, _J, _L, _O, _S, _T, _Z }
+
    FOR nI := 1 TO 7
       FOR nK := 1 TO 4
          aAux := ::CreateArray2D( 4, 4 )
@@ -313,19 +320,23 @@ METHOD InitTetrominoes() CLASS TTetrisGame
          ::aTetromino[ nI ][ nK ] := aAux
       NEXT
    NEXT
+
 RETURN NIL
 
 METHOD CreateArray2D( nH, nW ) CLASS TTetrisGame
    LOCAL aNew := Array( nH )
    LOCAL nI
+
    FOR nI := 1 TO nH
       aNew[ nI ] := Array( nW )
       AFill( aNew[ nI ], 0 )
    NEXT
+
 RETURN aNew
 
 METHOD BitToArray( aDest, nValue, nColor ) CLASS TTetrisGame
    LOCAL nX, nY, nBit := 15
+
    FOR nY := 1 TO 4
       FOR nX := 1 TO 4
          IF hb_bitTest( nValue, nBit )
@@ -336,6 +347,7 @@ METHOD BitToArray( aDest, nValue, nColor ) CLASS TTetrisGame
          nBit--
       NEXT
    NEXT
+
 RETURN NIL
 
 /*
@@ -506,7 +518,7 @@ METHOD MovePiece( nDirection ) CLASS TTetrisGame
    LOCAL nRemoveLines
 
    IF ::lGameOver .OR. ::lPaused
-      RETURN
+      RETURN NIL
    ENDIF
 
    DO CASE
@@ -556,6 +568,7 @@ METHOD MovePiece( nDirection ) CLASS TTetrisGame
    IF lRepaint
       ::Render()
    ENDIF
+
 RETURN NIL
 
 /*
@@ -570,7 +583,9 @@ Returns:
 NIL
 */
 METHOD RotatePiece() CLASS TTetrisGame
+
    LOCAL aAux := ::CreateArray2D( 4, 4 )
+
    ::nCurrentRot++
    IF ::nCurrentRot > 4
       ::nCurrentRot := 1
@@ -584,6 +599,7 @@ METHOD RotatePiece() CLASS TTetrisGame
          ::nCurrentRot := 4
       ENDIF
    ENDIF
+
 RETURN NIL
 
 /*
@@ -599,7 +615,9 @@ Returns:
 L -> .T. if collision detected
 */
 METHOD IsOccupied( nRow, nCol, aPiece ) CLASS TTetrisGame
+
    LOCAL nX, nY, nY2, nX2
+
    FOR nY := 1 TO 4
       FOR nX := 1 TO 4
          IF aPiece[ nY ][ nX ] > 0
@@ -614,6 +632,7 @@ METHOD IsOccupied( nRow, nCol, aPiece ) CLASS TTetrisGame
          ENDIF
       NEXT
    NEXT
+
 RETURN .F.
 
 /*
@@ -626,12 +645,15 @@ Returns:
 L -> .T. if top row has blocks
 */
 METHOD IsTopReached() CLASS TTetrisGame
+
    LOCAL nX
+
    FOR nX := 1 TO ::nMaxCol
       IF ::aBoard[ 1 ][ nX ] > 0
          RETURN .T.
       ENDIF
    NEXT
+
 RETURN .F.
 
 /*
@@ -645,8 +667,10 @@ Returns:
 N -> Number of lines cleared
 */
 METHOD RemoveLines() CLASS TTetrisGame
+
    LOCAL nLines := 0
    LOCAL nY, nY2, nX, nCont
+
    FOR nY := 1 TO ::nMaxRow
       nCont := 0
       FOR nX := 1 TO ::nMaxCol
@@ -663,10 +687,13 @@ METHOD RemoveLines() CLASS TTetrisGame
          nLines++
       ENDIF
    NEXT
+
 RETURN nLines
 
 METHOD PastePiece( aDest, nRow, nCol, aSrc ) CLASS TTetrisGame
+
    LOCAL nX, nY
+
    FOR nY := 1 TO 4
       FOR nX := 1 TO 4
          IF aSrc[ nY ][ nX ] > 0
@@ -678,15 +705,19 @@ METHOD PastePiece( aDest, nRow, nCol, aSrc ) CLASS TTetrisGame
          ENDIF
       NEXT
    NEXT
+
 RETURN NIL
 
 METHOD CopyPiece( aDest, aSrc ) CLASS TTetrisGame
+
    LOCAL nX, nY
+
    FOR nY := 1 TO 4
       FOR nX := 1 TO 4
          aDest[ nY ][ nX ] := aSrc[ nY ][ nX ]
       NEXT
    NEXT
+
 RETURN NIL
 
 /*
@@ -857,6 +888,7 @@ Returns:
 NIL
 */
 METHOD RefreshStats() CLASS TTetrisGame
+
    IF IsWindowDefined( "WinTetris" )
       SetProperty( "WinTetris", "lblScore", "Value", ;
          T( "label.score" ) + ": " + hb_ntos( ::nScore ) )
@@ -865,4 +897,5 @@ METHOD RefreshStats() CLASS TTetrisGame
       SetProperty( "WinTetris", "lblLines", "Value", ;
          T( "label.lines" ) + ": " + hb_ntos( ::nLines ) )
    ENDIF
+
 RETURN NIL

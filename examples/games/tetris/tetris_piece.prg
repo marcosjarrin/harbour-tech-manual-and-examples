@@ -7,8 +7,8 @@ Author        : Marcos Jarrín
 Email         : marvijarrin@gmail.com
 Website       : badasystem.com
 Date          : 28/08/2026
-Update        : 02/09/2026
-Rev           : 1.0.0
+Update        : 07/09/2026
+Rev           : 1.0.1
 SPDX-License-Identifier: MIT
 Description:
 Represents a single tetromino piece with shape, rotation, and color.
@@ -65,13 +65,16 @@ Returns:
 Self
 */
 METHOD New( nType, nRot ) CLASS TTetromino
-   LOCAL aShapes := TTetromino:GetShapes()
+
+   LOCAL aShapes := GetShapes()
+
    ::nType  := nType
    ::nRot   := nRot
    ::nColor := nType
    ::aShape := aShapes[ nType ][ nRot + 1 ]
    ::nRow   := 1
    ::nCol   := 1
+
 RETURN Self
 
 // Implementation of CLASSMETHOD uses standard METHOD command outside the block

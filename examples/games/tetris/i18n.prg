@@ -7,8 +7,8 @@ Author        : Marcos Jarrín
 Email         : marvijarrin@gmail.com
 Website       : badasystem.com
 Date          : 28/08/2026
-Update        : 01/09/2026
-Rev           : 1.0.0
+Update        : 07/09/2026
+Rev           : 1.0.1
 SPDX-License-Identifier: MIT
 Description:
 Internationalization module with MANUAL UTF-8 to ANSI conversion.
@@ -263,7 +263,7 @@ FUNCTION ChangeLanguage( cLang )
 // ============================================================================
 FUNCTION RefreshTetrisUI()
    IF ! IsWindowDefined( "WinTetris" )
-      RETURN
+      RETURN NIL
    ENDIF
    
    SetProperty( "WinTetris", "mnuMenuGame","Caption", T( "menu.game" ) )

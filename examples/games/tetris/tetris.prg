@@ -7,8 +7,8 @@ Author        : Marcos Jarrín
 Email         : marvijarrin@gmail.com
 Website       : badasystem.com
 Date          : 29/08/2026
-Update        : 06/09/2026
-Rev           : 1.0.1
+Update        : 07/09/2026
+Rev           : 1.0.2
 SPDX-License-Identifier: MIT
 Description:
 Entry point with background color selection menu.
@@ -40,7 +40,7 @@ PROCEDURE Main()
    ENDIF
    oGame := TTetrisGame():New()
    BuildTetrisWindow()
-RETURN NIL
+RETURN
 
 /*
 Procedure: BuildTetrisWindow
@@ -219,7 +219,7 @@ PROCEDURE BuildTetrisWindow()
 
    ACTIVATE WINDOW WinTetris
 
-RETURN NIL
+RETURN
 
 /*
  * ============================================================================
@@ -252,7 +252,7 @@ PROCEDURE TetrisKeyF2()
       SetFocus( "WinTetris" )
    ENDIF
 
-RETURN NIL
+RETURN
 
 
 /*
@@ -282,7 +282,7 @@ PROCEDURE TetrisKeyF5()
       SetFocus( "WinTetris" )
    ENDIF
 
-RETURN NIL
+RETURN
 
 
 /*
@@ -301,7 +301,7 @@ PROCEDURE TetrisKeyLeft()
       oGame:MovePiece( 1 )
    ENDIF
 
-RETURN NIL
+RETURN
 
 
 /*
@@ -320,7 +320,7 @@ PROCEDURE TetrisKeyRight()
       oGame:MovePiece( 2 )
    ENDIF
 
-RETURN NIL
+RETURN
 
 
 /*
@@ -339,7 +339,7 @@ PROCEDURE TetrisKeyUp()
       oGame:MovePiece( 3 )
    ENDIF
 
-RETURN NIL
+RETURN
 
 
 /*
@@ -358,4 +358,4 @@ PROCEDURE TetrisKeyDown()
       oGame:MovePiece( 4 )
    ENDIF
 
-RETURN NIL
+RETURN

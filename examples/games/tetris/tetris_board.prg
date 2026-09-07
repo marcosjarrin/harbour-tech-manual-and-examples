@@ -7,8 +7,8 @@ Author        : Marcos Jarrín
 Email         : marvijarrin@gmail.com
 Website       : badasystem.com
 Date          : 28/08/2026
-Update        : 02/09/2026
-Rev           : 1.0.0
+Update        : 07/09/2026
+Rev           : 1.0.1
 SPDX-License-Identifier: MIT
 */
 
@@ -43,12 +43,14 @@ CLASS TBoard
    DATA nRows
    DATA nCols
    DATA aGrid
+
    METHOD New( nRows, nCols ) CONSTRUCTOR
    METHOD Clear()
    METHOD CanMove( oPiece, nDx, nDy )
    METHOD CanPlace( oPiece, nRow, nCol )
    METHOD LockPiece( oPiece )
    METHOD ClearLines()
+   METHOD ShiftLinesDown( nRow )
    METHOD IsTopReached()
    METHOD GetGrid()
 ENDCLASS
@@ -64,7 +66,9 @@ Returns:
 Self
 */
 METHOD New( nRows, nCols ) CLASS TBoard
+
    LOCAL nI, nJ
+
    ::nRows := nRows
    ::nCols := nCols
    ::aGrid := Array( nRows )
@@ -74,6 +78,7 @@ METHOD New( nRows, nCols ) CLASS TBoard
          ::aGrid[ nI ][ nJ ] := 0
       NEXT
    NEXT
+
 RETURN Self
 
 /*
@@ -86,12 +91,15 @@ Returns:
 NIL
 */
 METHOD Clear() CLASS TBoard
+
    LOCAL nI, nJ
+
    FOR nI := 1 TO ::nRows
       FOR nJ := 1 TO ::nCols
          ::aGrid[ nI ][ nJ ] := 0
       NEXT
    NEXT
+
 RETURN NIL
 
 /*
@@ -107,10 +115,13 @@ Returns:
 L -> .T. if move is valid
 */
 METHOD CanMove( oPiece, nDx, nDy ) CLASS TBoard
+
    LOCAL nRow, nCol, nI, nJ
    LOCAL nNewRow, nNewCol
+
    nRow := oPiece:nRow + nDy
    nCol := oPiece:nCol + nDx
+
    FOR nI := 1 TO 4
       FOR nJ := 1 TO 4
          IF oPiece:aShape[ nI ][ nJ ] > 0
@@ -130,6 +141,7 @@ METHOD CanMove( oPiece, nDx, nDy ) CLASS TBoard
          ENDIF
       NEXT
    NEXT
+
 RETURN .T.
 
 /*
@@ -144,7 +156,9 @@ Returns:
 L -> .T. if placement is valid
 */
 METHOD CanPlace( oPiece, nRow, nCol ) CLASS TBoard
+
    LOCAL nI, nJ, nNewRow, nNewCol
+
    FOR nI := 1 TO 4
       FOR nJ := 1 TO 4
          IF oPiece:aShape[ nI ][ nJ ] > 0
@@ -162,6 +176,7 @@ METHOD CanPlace( oPiece, nRow, nCol ) CLASS TBoard
          ENDIF
       NEXT
    NEXT
+
 RETURN .T.
 
 /*
@@ -175,7 +190,9 @@ Returns:
 NIL
 */
 METHOD LockPiece( oPiece ) CLASS TBoard
+
    LOCAL nI, nJ, nRow, nCol
+
    FOR nI := 1 TO 4
       FOR nJ := 1 TO 4
          IF oPiece:aShape[ nI ][ nJ ] > 0
@@ -189,6 +206,7 @@ METHOD LockPiece( oPiece ) CLASS TBoard
          ENDIF
       NEXT
    NEXT
+
 RETURN NIL
 
 /*
@@ -202,9 +220,11 @@ Returns:
 N -> Number of lines cleared
 */
 METHOD ClearLines() CLASS TBoard
+
    LOCAL nCleared := 0
    LOCAL nI, nJ
    LOCAL lFull
+
    FOR nI := ::nRows TO 1 STEP -1
       lFull := .T.
       FOR nJ := 1 TO ::nCols
@@ -213,6 +233,7 @@ METHOD ClearLines() CLASS TBoard
             EXIT
          ENDIF
       NEXT
+
       IF lFull
          // Clear this line
          FOR nJ := 1 TO ::nCols
@@ -224,19 +245,24 @@ METHOD ClearLines() CLASS TBoard
          nI++  // Recheck this row (shifted down)
       ENDIF
    NEXT
+
 RETURN nCleared
 
 METHOD ShiftLinesDown( nRow ) CLASS TBoard
+
    LOCAL nI, nJ
+
    FOR nI := nRow TO 2 STEP -1
       FOR nJ := 1 TO ::nCols
          ::aGrid[ nI ][ nJ ] := ::aGrid[ nI - 1 ][ nJ ]
       NEXT
    NEXT
+
    // Clear top row
    FOR nJ := 1 TO ::nCols
       ::aGrid[ 1 ][ nJ ] := 0
    NEXT
+
 RETURN NIL
 
 /*
@@ -249,12 +275,15 @@ Returns:
 L -> .T. if top row has blocks
 */
 METHOD IsTopReached() CLASS TBoard
+
    LOCAL nJ
+
    FOR nJ := 1 TO ::nCols
       IF ::aGrid[ 1 ][ nJ ] > 0
          RETURN .T.
       ENDIF
    NEXT
+
 RETURN .F.
 
 /*
